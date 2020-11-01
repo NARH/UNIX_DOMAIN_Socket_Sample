@@ -1,6 +1,5 @@
 package com.github.narh.sample.unixsocket;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -53,19 +52,26 @@ public class Server {
       Socket socket = server.accept();
       if(logger.isDebugEnabled()) logger.debug("Connected: {}", socket);
 
-      Reader is       = new InputStreamReader(new BufferedInputStream(socket.getInputStream()));
-      String inputStr = IOUtils.toString(is);
+      Reader reader   = new InputStreamReader(socket.getInputStream());
+      Writer writer   = new OutputStreamWriter(socket.getOutputStream());
+
+      IOUtils.write("Connected.", writer);
+      writer.flush();
+
+      String inputStr = "";
+      while(reader.ready()) {
+        inputStr    += IOUtils.toString(reader);
+      }
       if(logger.isInfoEnabled()) logger.info("Received String: {}", inputStr);
 
       String data     = execute(inputStr);
 
-      Writer os = new OutputStreamWriter(socket.getOutputStream());
-      IOUtils.write(data, os);
-      os.flush();
+      IOUtils.write(data, writer);
+      writer.flush();
       if(logger.isInfoEnabled()) logger.info("Responsed String: {}", data);
 
-      IOUtils.closeQuietly(is);
-      IOUtils.closeQuietly(os);
+      IOUtils.closeQuietly(reader);
+      IOUtils.closeQuietly(writer);
       IOUtils.closeQuietly(socket);
     }
 
