@@ -5,12 +5,12 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.newsclub.net.unix.AFUNIXSocketAddress;
 
-public class App {
+import com.github.narh.sample.unixsocket.server.BaseServer;
+import com.github.narh.sample.unixsocket.server.EchoServer;
 
-  private static Logger logger                = LoggerFactory.getLogger(App.class);
+public class EchoApp {
 
   private static ResourceBundle resources     = ResourceBundle.getBundle("config");
 
@@ -20,7 +20,8 @@ public class App {
     File socketFile = (StringUtils.contains(resources.getString(SOCKET_FILE_NAME), IOUtils.DIR_SEPARATOR))
         ? new File(resources.getString(SOCKET_FILE_NAME))
         : new File(System.getProperty("java.io.tmpdir") + IOUtils.DIR_SEPARATOR + resources.getString(SOCKET_FILE_NAME));
-    Server server   = new Server(socketFile);
-    server.startUp();
+
+    BaseServer server   = new EchoServer(new AFUNIXSocketAddress(socketFile));
+    server.start();
   }
 }

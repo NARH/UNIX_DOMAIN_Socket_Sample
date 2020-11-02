@@ -1,18 +1,21 @@
 #!/usr/bin/perl -w
 
-use feature qw(say);
 use strict;
 use warnings;
-use IO::Socket;
+use IO::Socket::UNIX;
 use utf8;
 
-my $name = "/var/folders/zd/jq2vr_t53hldzjrrz3g6ycc40000gn/T/JAVA_UNIX_DOMAIN.sock";
-my $s;
-socket($s, AF_UNIX, SOCK_STREAM, 0)  || die "socket: $!";
-connect($s, pack_sockaddr_un($name)) || die "connect: $!";;
-print $s "Hello\n";
-print <$s>;
-close($s);
+my $socket_path = "/tmp/JAVA_UNIX_DOMAIN.sock";
+my $socket      = IO::Socket::UNIX->new(
+    Type        => SOCK_STREAM(),
+    Peer        => $socket_path
+) || die("Can't connect to server: $!\n");
 
-exit;
+print $socket "foo bar\n";
+my $response    = <$socket>;
+close($socket);
+
+chomp($response);
+print qq{server say $response\n};
+
 1

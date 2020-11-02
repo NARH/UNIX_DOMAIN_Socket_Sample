@@ -8,23 +8,33 @@
   <packaging>jar</packaging>
 
   <properties>
-    <maven.compiler.target>1.7</maven.compiler.target>
-    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <junixsocket.version>1.0.2</junixsocket.version>
+    <junixsocket.version>2.3.2</junixsocket.version>
     <slf4j.version>1.7.30</slf4j.version>
   </properties>
 
   <dependencies>
     <dependency>
-        <groupId>no.fiken.oss.junixsocket</groupId>
-        <artifactId>junixsocket-common</artifactId>
+        <groupId>com.kohlschutter.junixsocket</groupId>
+        <artifactId>junixsocket-core</artifactId>
         <version>${junixsocket.version}</version>
     </dependency>
     <dependency>
-        <groupId>no.fiken.oss.junixsocket</groupId>
-        <artifactId>junixsocket-native-common</artifactId>
+        <groupId>com.kohlschutter.junixsocket</groupId>
+        <artifactId>junixsocket-server</artifactId>
         <version>${junixsocket.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>com.kohlschutter.junixsocket</groupId>
+        <artifactId>junixsocket-rmi</artifactId>
+        <version>${junixsocket.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.nanohttpd</groupId>
+        <artifactId>nanohttpd</artifactId>
+        <version>2.2.0</version>
     </dependency>
     <dependency>
         <groupId>commons-io</groupId>
@@ -47,6 +57,11 @@
         <version>${slf4j.version}</version>
     </dependency>
     <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.16</version>
+    </dependency>
+    <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>4.13</version>
@@ -65,4 +80,23 @@
         <scope>test</scope>
     </dependency>
   </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>com.github.narh.sample.unixsocket.EchoApp</mainClass>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
